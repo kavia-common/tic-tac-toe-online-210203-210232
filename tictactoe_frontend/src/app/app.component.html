@@ -1,3 +1,59 @@
-<div class="container">
-  <h1>{{ title }}</h1>
+<div class="page">
+  <div class="card">
+    <header class="header">
+      <h1 class="title">{{ title }}</h1>
+      <div class="subtitle">Ocean Professional Edition</div>
+    </header>
+
+    <section class="status">
+      <div class="row">
+        <div class="badge" [ngClass]="{'x': currentPlayer()==='X', 'o': currentPlayer()==='O'}">
+          Current: <strong>{{ currentPlayer() }}</strong>
+        </div>
+        <div class="badge neutral" *ngIf="isGameOver() && winner() === ''">Result: <strong>Draw</strong></div>
+        <div class="badge win" *ngIf="isGameOver() && winner() !== ''">Winner: <strong>{{ winner() }}</strong></div>
+      </div>
+      <div class="scores">
+        <div class="score x">X Wins: {{ scores().x }}</div>
+        <div class="score o">O Wins: {{ scores().o }}</div>
+        <div class="score d">Draws: {{ scores().d }}</div>
+      </div>
+    </section>
+
+    <section class="board-wrap">
+      <app-board
+        [cells]="board()"
+        [disabled]="isGameOver()"
+        (cellClick)="onCellClick($event)">
+      </app-board>
+    </section>
+
+    <section class="controls">
+      <button class="btn primary" (click)="onRestart()">Restart</button>
+      <button class="btn secondary" [disabled]="true" title="Coming soon" (click)="toggleSinglePlayer()">
+        Single Player (Soon)
+      </button>
+    </section>
+
+    <section class="audit">
+      <h2>Audit Trail (in-memory)</h2>
+      <div class="audit-list">
+        <div class="audit-item" *ngFor="let e of getAuditTrail(); let i = index">
+          <div class="meta">
+            <span class="time">{{ e.timestamp }}</span>
+            <span class="user">{{ e.userId }}</span>
+            <span class="action">{{ e.action }}</span>
+          </div>
+          <div class="details" *ngIf="e.action==='MOVE'">
+            Cell: {{ e.metadata?.index }} |
+            Before: {{ e.metadata?.boardBefore?.join('') }} |
+            After: {{ e.metadata?.boardAfter?.join('') }}
+          </div>
+          <div class="details" *ngIf="e.action==='RESET'">
+            Reason: {{ e.metadata?.reason || 'n/a' }}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>

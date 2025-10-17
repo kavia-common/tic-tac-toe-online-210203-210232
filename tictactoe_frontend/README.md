@@ -1,59 +1,69 @@
-# Angular
+# Tic Tac Toe - Ocean Professional (Angular)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.1.
+This Angular app implements a complete Tic Tac Toe game with a modern "Ocean Professional" theme, in-memory audit trail, and scaffolding for role-based access control and single-player mode.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- 3x3 board with turn indicator
+- Win/draw detection; board locks after game over until restart
+- Score tracking for X wins, O wins, and draws
+- Restart control
+- In-memory Audit Trail capturing:
+  - ISO timestamp
+  - userId (`playerX`, `playerO`, or `system`)
+  - action (`MOVE`, `RESET`, `ERROR`)
+  - metadata: index, boardBefore, boardAfter, reason (when reset)
+- Ocean Professional theme:
+  - Primary #2563EB, Secondary #F59E0B, Error #EF4444
+  - Background #f9fafb, Surface #ffffff, Text #111827
+  - Rounded corners, subtle gradients, soft shadows
+- RBAC scaffolding:
+  - `Role` enum (Player, Auditor)
+  - Commented placeholders for future permission checks
+- Single-player mode scaffold (UI button disabled, service stub present)
 
-```bash
-ng serve
-```
+## Run
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Development server (already configured for port 3000 to match preview system):
+  ```
+  npm install
+  npm start
+  ```
+  Open: http://localhost:3000
 
-## Code scaffolding
+- Unit tests:
+  ```
+  npm test
+  ```
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Code Structure
 
-```bash
-ng generate component component-name
-```
+- `src/app/services/game.service.ts`: game state, validation, win/draw detection, scores, reset, audit logging, AI stub
+- `src/app/services/audit.service.ts`: in-memory audit log
+- `src/app/components/board/board.component.*`: 3x3 board UI
+- `src/app/app.component.*`: page layout, scoreboard, controls, audit trail list
+- `src/app/models/audit.models.ts`: AuditEntry, ActionType, Role
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Compliance Notes
 
-```bash
-ng generate --help
-```
+- Audit trail captured contemporaneously in memory (persisted storage can be added later).
+- Data Integrity (ALCOA+): entries are attributable, timestamped, legible, and accurate per UI actions.
+- Error handling scaffolding: service catches and logs errors under `ActionType.ERROR`.
+- Access Control: placeholders are present for RBAC checks before operations.
 
-## Building
+## Tests
 
-To build the project run:
+`src/app/services/game.service.spec.ts` includes:
+- Happy path: moves and turn switch
+- Win detection and lockout
+- Draw detection
+- Invalid move validation
+- Reset resets state and creates RESET audit entry
+- MOVE audit entries include before/after snapshots
 
-```bash
-ng build
-```
+## Future Work
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Implement authentication and tie user identity to audit `userId`
+- Enforce RBAC permissions based on `Role`
+- Persist audit logs
+- Implement computer opponent logic and enable Single Player mode

@@ -1,0 +1,10 @@
+<div class="board">
+  <button
+    class="cell"
+    *ngFor="let c of cells; index as i; trackBy: trackByIndex"
+    [disabled]="disabled || c !== ''"
+    (click)="onCell(i)"
+    [attr.aria-label]="'Cell ' + i + ' ' + (c || 'empty')">
+    <span class="symbol" [class.x]="c==='X'" [class.o]="c==='O'">{{ c }}</span>
+  </button>
+</div>
