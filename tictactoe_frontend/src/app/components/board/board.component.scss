@@ -43,8 +43,9 @@
 
   .symbol {
     font-size: 40px;
-    font-weight: 800;
+    line-height: 1;
     color: var(--color-text);
+    user-select: none;
 
     &.x {
       color: var(--color-primary);

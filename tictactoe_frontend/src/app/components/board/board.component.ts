@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgFor } from '@angular/common';
 
 /**
 // ============================================================================
@@ -16,11 +17,14 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
   selector: 'app-board',
   standalone: true,
+  imports: [NgFor],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
 })
 export class BoardComponent {
-  @Input() cells: string[] = Array(9).fill('');
+  // Define Cell union matching game service: '', 'X', 'O'
+  private static readonly EMPTY: '' = '';
+  @Input() cells: ('' | 'X' | 'O')[] = Array(9).fill(BoardComponent.EMPTY);
   @Input() disabled = false;
 
   @Output() cellClick = new EventEmitter<number>();
@@ -36,5 +40,26 @@ export class BoardComponent {
   trackByIndex(i: number): number {
     /** TrackBy function for performance */
     return i;
+  }
+
+  // PUBLIC_INTERFACE
+  iconFor(value: string): string {
+    /** Map stored mark to display icon (Unicode chess). X→♞ (Knight), O→♛ (Queen), ''→'' */
+    switch (value) {
+      case 'X': return '♞';
+      case 'O': return '♛';
+      default: return '';
+    }
+  }
+
+  // PUBLIC_INTERFACE
+  ariaLabelFor(value: string, index: number): string {
+    /**
+     * Builds accessible label for a cell.
+     * Empty cells are announced as "Cell {index} empty".
+     * X cells are "Cell {index} Knight", O cells are "Cell {index} Queen".
+     */
+    const role = value === 'X' ? 'Knight' : value === 'O' ? 'Queen' : 'empty';
+    return `Cell ${index} ${role}`;
   }
 }

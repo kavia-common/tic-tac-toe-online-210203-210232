@@ -4,7 +4,14 @@
     *ngFor="let c of cells; index as i; trackBy: trackByIndex"
     [disabled]="disabled || c !== ''"
     (click)="onCell(i)"
-    [attr.aria-label]="'Cell ' + i + ' ' + (c || 'empty')">
-    <span class="symbol" [class.x]="c==='X'" [class.o]="c==='O'">{{ c }}</span>
+    [attr.aria-label]="ariaLabelFor(c, i)">
+    <span
+      class="symbol"
+      [class.x]="c==='X'"
+      [class.o]="c==='O'"
+      role="img"
+      [attr.aria-label]="c==='X' ? 'Knight' : c==='O' ? 'Queen' : null">
+      {{ iconFor(c) }}
+    </span>
   </button>
 </div>

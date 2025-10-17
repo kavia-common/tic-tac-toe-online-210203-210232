@@ -8,14 +8,26 @@
     <section class="status">
       <div class="row">
         <div class="badge" [ngClass]="{'x': currentPlayer()==='X', 'o': currentPlayer()==='O'}">
-          Current: <strong>{{ currentPlayer() }}</strong>
+          Current:
+          <strong>
+            <span role="img" [attr.aria-label]="currentPlayer()==='X' ? 'Knight' : 'Queen'">
+              {{ currentPlayer()==='X' ? '♞' : '♛' }}
+            </span>
+          </strong>
         </div>
         <div class="badge neutral" *ngIf="isGameOver() && winner() === ''">Result: <strong>Draw</strong></div>
-        <div class="badge win" *ngIf="isGameOver() && winner() !== ''">Winner: <strong>{{ winner() }}</strong></div>
+        <div class="badge win" *ngIf="isGameOver() && winner() !== ''">
+          Winner:
+          <strong>
+            <span role="img" [attr.aria-label]="winner()==='X' ? 'Knight' : 'Queen'">
+              {{ winner()==='X' ? '♞' : '♛' }}
+            </span>
+          </strong>
+        </div>
       </div>
       <div class="scores">
-        <div class="score x">X Wins: {{ scores().x }}</div>
-        <div class="score o">O Wins: {{ scores().o }}</div>
+        <div class="score x"><span aria-hidden="true">♞</span> X Wins: {{ scores().x }}</div>
+        <div class="score o"><span aria-hidden="true">♛</span> O Wins: {{ scores().o }}</div>
         <div class="score d">Draws: {{ scores().d }}</div>
       </div>
     </section>
